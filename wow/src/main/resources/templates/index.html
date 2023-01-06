@@ -22,11 +22,44 @@
 <script th:src="@{~/js/jquery-3.6.3.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
+let loginId = /*[[${loginId}]]*/'';
+let userName = /*[[${userName}]]*/'';
+
 $(document).ready(function(){
-	let loginId = /*[[${loginId}]]*/'';
-	let userName = /*[[${userName}]]*/'';
 	
+	fn_single_Data();
 });
+
+	function fn_single_Data(){
+	    //var data=$("#input").val();	    
+	    var data = {};
+	    	data['userId'] = loginId;
+		
+		    /* 
+		    $.ajax({
+		        url: "/main/order_sherch",
+		        data: data,
+		        type:"POST",
+		    }).done(function (fragment) {
+		       // $("#resultDiv").replaceWith(fragment);
+		    }); */
+		    
+		    
+		    $.ajax({
+				url: '/main/order_sherch',
+				type: 'GET',
+				success: function (data) {
+					if (data) {
+						
+					}
+				}
+			})
+			
+		
+	}
+
+
+
 
 </script>
 

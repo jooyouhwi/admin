@@ -1,17 +1,27 @@
 package com.wow.api.controller.admin;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wow.api.dao.MainMapper;
+import com.wow.api.dao.SystemMapper;
+import com.wow.api.dto.MainDto;
+import com.wow.api.model.MainModel;
 import com.wow.api.service.CustomerUserDetails;
 
 @Controller
 @RequestMapping(path = "/")
 public class adminMainController {
+	
+	@Autowired
+	private MainMapper mainMapper;
+	
 	
 	@RequestMapping("/")
 	public String layout() {
@@ -44,6 +54,24 @@ public class adminMainController {
 		System.out.println("dblist");
 		
 		return "admin/table-datatable-basic";
+	}
+
+	@RequestMapping("/main/order_sherch")
+	public @ResponseBody MainModel mainSerch(Model model, MainDto dto) {
+
+		System.out.println("order_sherch");
+		// his.memberService.memberInfor(comId, lang, id);
+		
+		System.out.println("userid : "+dto.userId);
+		// mapper 호출
+		  MainModel mmodel = mainMapper.mainOrder(dto.userId);
+		  
+		  System.out.println(mmodel);
+		  
+		  
+		
+		
+		return null;
 	}
 	
 	

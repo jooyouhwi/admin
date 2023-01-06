@@ -14,8 +14,15 @@
 <script th:src="@{~/js/jquery-3.6.3.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
-	//let frm = $("#frm");
 	$(document).ready(function(){
+		
+		var paramError = '[[${param.error}]]';
+		
+		if(paramError==true || paramError!="null"){
+			alert("로그인 정보를 확인해 주세요");	
+		}
+		
+		
 		$('#submit').on('click', function() {
 			fn_login();
 		});			
