@@ -6,5 +6,7 @@
     <mapper resource="CompanyMapper.xml"/>
     <mapper resource="MaccoMapper.xml"/>
     <mapper resource="PgMapper.xml"/>
+    <mapper resource="Sysetm.xml"/>
+    <mapper resource="Member.xml"/>
   </mappers>
 </configuration>

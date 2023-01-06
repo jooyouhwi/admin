@@ -19,6 +19,17 @@
 
 <body>
 
+<script th:src="@{~/js/jquery-3.6.3.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+$(document).ready(function(){
+	let loginId = /*[[${loginId}]]*/'';
+	let userName = /*[[${userName}]]*/'';
+	
+});
+
+</script>
+
     <!--*******************
         Preloader start
     ********************-->
@@ -153,7 +164,8 @@
                                         <i class="icon-envelope-open"></i>
                                         <span class="ml-2">Inbox </span>
                                     </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <!-- <a th:href="${'/login'}" class="dropdown-item"> -->
+                                    <a th:href="${'/logout'}" class="dropdown-item">
                                         <i class="icon-key"></i>
                                         <span class="ml-2">Logout </span>
                                     </a>
@@ -262,7 +274,8 @@
                                 class="icon icon-layout-25"></i><span class="nav-text">Table</span></a>
                         <ul aria-expanded="false">
                             <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-                            <li><a href="table-datatable-basic.html">Datatable</a></li>
+                            <!-- <li><a href="table-datatable-basic.html">Datatable</a></li> -->
+                            <li><a th:href="${'/dblist'}">Datatable</a></li>
                         </ul>
                     </li>
 
@@ -271,7 +284,7 @@
                                 class="icon icon-single-copy-06"></i><span class="nav-text">Pages</span></a>
                         <ul aria-expanded="false">
                             <li><a href="./page-register.html">Register</a></li>
-                            <li><a href="./page-login.html">Login</a></li>
+                            <li><a th:href="${'login'}">Login</a></li>
                             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Error</a>
                                 <ul aria-expanded="false">
                                     <li><a href="./page-error-400.html">Error 400</a></li>

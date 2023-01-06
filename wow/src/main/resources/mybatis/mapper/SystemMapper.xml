@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.wow.api.dao.SystemMapper">
+	<!-- 로그인 암호화 -->
+	<select id="system_encrypt" parameterType="com.wow.api.model.SystemModel" resultType="string">
+		 SELECT SHA256.ENCRYPT(#{passwd}) AS passwd FROM DUAL
+	</select>
+</mapper>

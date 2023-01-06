@@ -11,6 +11,23 @@
     <link href="./css/style.css" rel="stylesheet">
 
 </head>
+<script th:src="@{~/js/jquery-3.6.3.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+	//let frm = $("#frm");
+	$(document).ready(function(){
+		$('#submit').on('click', function() {
+			fn_login();
+		});			
+	});
+	
+	
+	
+	function fn_login(){
+		//아이디 입력유무 체크 
+		$("#frm").submit();
+	}
+</script>
 
 <body class="h-100">
     <div class="authincation h-100">
@@ -22,14 +39,15 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form action="index.html">
+                                    <!-- <form name ="frm" action="/login_proc"method="get" id="loginForm"> -->
+                                    <form name ="frm" action="/login" method="post" id="loginForm">
                                         <div class="form-group">
-                                            <label><strong>Email</strong></label>
-                                            <input type="email" class="form-control" value="hello@example.com">
+                                            <label><strong>UserId</strong></label>
+                                            <input type="text" id="userid" name="username" class="form-control" value="19020036">
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Password</strong></label>
-                                            <input type="password" class="form-control" value="Password">
+                                            <input type="password" id="passwd" name="password"class="form-control" value="1234">
                                         </div>
                                         <div class="form-row d-flex justify-content-between mt-4 mb-2">
                                             <div class="form-group">
@@ -43,7 +61,9 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign me in</button>
+                                            <!-- <a href="#" id="submit" ><span class="btn btn-primary btn-block">Sign me in</span></a> -->
+                                            <button type="submit" form="loginForm" class="btn btn-primary btn-block">Sign me in</button>
+                                            
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
