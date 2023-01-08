@@ -10,5 +10,6 @@
              , 2600 AS monthAmt
           FROM Ord_Mst
          WHERE Userid =${userId}
+           AND rownum = 1 
 	</select>
 </mapper>

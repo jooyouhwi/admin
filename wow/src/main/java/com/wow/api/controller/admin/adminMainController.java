@@ -58,20 +58,27 @@ public class adminMainController {
 
 	@RequestMapping("/main/order_sherch")
 	public @ResponseBody MainModel mainSerch(Model model, MainDto dto) {
-
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		CustomerUserDetails userDetails = (CustomerUserDetails) auth.getPrincipal();
+		String userId  = userDetails.getMember().userid;
+		
 		System.out.println("order_sherch");
 		// his.memberService.memberInfor(comId, lang, id);
 		
 		System.out.println("userid : "+dto.userId);
+		System.out.println("userid : "+userId);
+		
 		// mapper 호출
-		  MainModel mmodel = mainMapper.mainOrder(dto.userId);
+		MainModel mmodel = mainMapper.mainOrder(userId);
 		  
-		  System.out.println(mmodel);
+		System.out.println("toDayAmt:::: "+mmodel.toDayAmt);
+		System.out.println("monthAmt:::: "+mmodel.monthAmt);
 		  
-		  
-		
-		
-		return null;
+		model.addAttribute("toDayAmt", mmodel.toDayAmt);
+		model.addAttribute("monthAmt", mmodel.monthAmt);
+			
+		return mmodel;
 	}
 	
 	

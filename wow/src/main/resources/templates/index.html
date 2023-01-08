@@ -34,7 +34,6 @@ $(document).ready(function(){
 	    //var data=$("#input").val();	    
 	    var data = {};
 	    	data['userId'] = loginId;
-		
 		    /* 
 		    $.ajax({
 		        url: "/main/order_sherch",
@@ -43,13 +42,15 @@ $(document).ready(function(){
 		    }).done(function (fragment) {
 		       // $("#resultDiv").replaceWith(fragment);
 		    }); */
-		    
-		    
+		    //console.log(data);
 		    $.ajax({
 				url: '/main/order_sherch',
 				type: 'GET',
 				success: function (data) {
 					if (data) {
+						//data.todayAmt
+						//data.monthAmt
+						console.log(data);
 						
 					}
 				}
