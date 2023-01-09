@@ -6,10 +6,71 @@
 <mapper namespace="com.wow.api.dao.MainMapper">
 	<!-- 로그인 암호화 -->
 	<select id="mainOrder" parameterType="com.wow.api.model.MainModel" resultType="com.wow.api.model.MainModel">
-	    SELECT 8300 AS toDayAmt
-             , 2600 AS monthAmt
+	    SELECT 83000 AS toDayAmt
+             , 126000 AS monthAmt
+             , 226000 AS pToDayAmt
+             , 326000 AS pMonthAmt
           FROM Ord_Mst
          WHERE Userid =${userId}
            AND rownum = 1 
 	</select>
+	
+	<!-- <select id="mainChart" parameterType="com.wow.api.model.MainModel" resultType="com.wow.api.model.MainModel"> -->
+	<select id="mainChart" parameterType="com.wow.api.model.MainModel" resultType="map">
+		<!-- select 30 as month01 
+		      ,20 as month02
+		      ,10 as month03
+		      ,5  as month04
+		      ,49 as month05
+		      ,5  as month06
+		      ,74 as month07
+		      ,25 as month08
+		      ,0  as month09
+		      ,3  as month10
+		      ,62 as month11
+		      ,45 as month12
+		  from dual
+		 union all
+		select 15 as month01 
+		      ,61 as month02
+		      ,50 as month03
+		      ,27 as month04
+		      ,12 as month05
+		      ,39 as month06
+		      ,25 as month07
+		      ,21 as month08
+		      ,9  as month09
+		      ,52 as month10
+		      ,84 as month11
+		      ,63 as month12
+		  from dual -->
+	  WITH T_TEMP AS
+	    (select 30 as month01 
+	              ,20 as month02
+	              ,10 as month03
+	              ,5  as month04
+	              ,49 as month05
+	              ,5  as month06
+	              ,74 as month07
+	              ,25 as month08
+	              ,0  as month09
+	              ,3  as month10
+	              ,62 as month11
+	              ,45 as month12
+	          from dual
+	    )
+	SELECT month,
+	       cnt
+	  FROM T_TEMP
+	 UNPIVOT( cnt FOR month IN (month01,month02,month03,month04,month05,month06,month07,month08,month09,month10,month11,month12))
+	</select>
+	
+	<select id="mainRegCnt" parameterType="com.wow.api.model.MainModel" resultType="com.wow.api.model.MainModel">
+	  SELECT count(1) AS totalCnt
+	       , 22 AS regCnt 
+	       , 9 AS secCnt 
+	  FROM MEMBER
+	 start with userid =#{userId}
+	 connect by p_id = prior userid 
+	</select> 
 </mapper>

@@ -10,8 +10,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
     <link rel="stylesheet" href="./vendor/owl-carousel/css/owl.carousel.min.css">
     <link rel="stylesheet" href="./vendor/owl-carousel/css/owl.theme.default.min.css">
-    <link href="./vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+    <!-- <link href="./vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet"> -->
+    
     <link href="./css/style.css" rel="stylesheet">
+  	<!-- 지도   -->
+    <link href="./vendor/vectormap/css/jquery-jvectormap-2.0.5.css" rel="stylesheet">
 
 
 
@@ -27,39 +30,167 @@ let userName = /*[[${userName}]]*/'';
 
 $(document).ready(function(){
 	
-	fn_single_Data();
+	fn_single_Data();   // index1
+	fn_chart1();        // index2
+	fn_totalCnt();      // index3
+	
+	//$('#map').vectorMap({map: 'kr_mill'});
 });
+
+
 
 	function fn_single_Data(){
 	    //var data=$("#input").val();	    
 	    var data = {};
-	    	data['userId'] = loginId;
-		    /* 
+	    	data['userId'] = loginId;	    	
+	    var id       = '[[${loginId}]]';
+	    
+	    let cnt        = 10000;   
+	    let percent    = 0;
+	    let toDayNum   = 0;
+	    let monthNum   = 0;
+	    let pToDayNum  = 0;
+	    let pMonthNum  = 0;
 		    $.ajax({
-		        url: "/main/order_sherch",
-		        data: data,
-		        type:"POST",
-		    }).done(function (fragment) {
-		       // $("#resultDiv").replaceWith(fragment);
-		    }); */
-		    //console.log(data);
-		    $.ajax({
-				url: '/main/order_sherch',
+				url: '/main/order_sherch/'+id,
 				type: 'GET',
 				success: function (data) {
 					if (data) {
-						//data.todayAmt
-						//data.monthAmt
-						console.log(data);
+						$("#toDayAmt").text(setComma(data.toDayAmt));    // 당일주문금액
+						$("#monthAmt").text(setComma(data.monthAmt));    // 당월주문금액
+						$("#pToDayAmt").text(setComma(data.pToDayAmt));  // 당일산하주문금액
+						$("#pMonthAmt").text(setComma(data.pMonthAmt));  // 당월산하 주문금액
 						
+						//프로그래스바 퍼센트 구한다.
+						toDayNum = fn_section((parseInt(data.toDayAmt)/cnt));
+						monthNum = fn_section((parseInt(data.monthAmt)/cnt));
+						pToDayNum = fn_section((parseInt(data.pToDayAmt)/cnt));
+						pMonthNum = fn_section((parseInt(data.pMonthAmt)/cnt));
+						
+						//당일 주문 금액
+						$("#mainAmt").find("div > .progress-bar").eq(0).addClass("progress-bar progress-bar-success w-"+toDayNum);
+						//당월주문금액
+						$("#mainAmt").find("div > .progress-bar").eq(1).addClass("progress-bar progress-bar-primary w-"+monthNum);
+						//당일산하주문금액
+						$("#mainAmt").find("div > .progress-bar").eq(2).addClass("progress-bar progress-bar-warning w-"+pToDayNum);
+						//당월산하 주문금액
+						$("#mainAmt").find("div > .progress-bar").eq(3).addClass("progress-bar progress-bar-danger w-"+pMonthNum);
 					}
 				}
-			})
-			
+			});
+	}
+	
+	// 퍼센트 조정 
+	function fn_section(data){
+		let num=0;
 		
+		if(data>=0 && data <=10){
+			num = 10;
+		}else if(data>10 && data <=20){
+			num = 20;
+		}else if(data>20 && data <=30){
+			num = 30;
+		}else if(data>30 && data <=40){
+			num = 40;
+		}else if(data>40 && data <=50){
+			num = 50;
+		}else if(data>50 && data <=60){
+			num = 60;
+		}else if(data>60 && data <=70){
+			num = 70;
+		}else if(data>70 && data <=80){
+			num = 80;
+		}else if(data>80 && data <=90){
+			num = 90;
+		}else if(data>90 ){
+			num = 100;
+		}else{
+			num = 0;
+		}
+		
+		return num;
+	}
+	
+	
+	
+	function setComma(n) {
+		var reg = /(^[+-]?\d+)(\d{3})/;
+		n += '';
+		while (reg.test(n)) {
+			n = n.replace(reg, '$1' + ',' + '$2');
+		}
+		return n;
+	}
+	
+	
+	function fn_chart1(){
+	    var data = {};
+	        data['userId'] = loginId;	    	
+	    var id = '[[${loginId}]]';
+	    var jsonEncode = "";
+	    var list = new Array();
+	    
+		$.ajax({
+			url: '/main/order_chart/'+id,
+			type: 'GET',
+			success: function (data) {
+				if (data) {
+					$.each(data, function (k, v) {
+						//var size = Object.keys(v).length;
+						//console.log(size);
+						var obj = new Object();
+						  list.push({
+							    y: k+1+"월",
+					            a: v.CNT 
+					            //b: v.MONTH01
+					        }); 
+						
+					});
+
+					barChart(list);
+				}
+			}
+		});
+	}
+	
+	
+	function barChart(array){
+	    // Morris bar chart
+	    Morris.Bar({
+	        element: 'morris-bar-chart',
+	        data : array,
+	         /* data: [{y: '1',a: 100,b: 90}, 
+	        	       {y: '2',a: 75,b: 65}] 
+	        */	       
+	        xkey: 'y',
+	        ykeys: ['a'],
+	        //labels: ['A', 'B'],
+	        labels: ['회원수'],
+	        barColors: ['#5873FE'],
+	        //barColors: ['#343957', '#5873FE'],
+	        hideHover: 'auto',
+	        gridLineColor: '#eef0f2',
+	        resize: true
+	    });
+
 	}
 
+	function fn_totalCnt(){
+		
+	    var id       = '[[${loginId}]]';
+		$.ajax({
+			url: '/main/total_cnt/'+id,
+			type: 'GET',
+			success: function (data) {
+				if (data) {
 
+					$("#totalCnt").text(data.totalCnt);
+					$("#regCnt").text(data.regCnt +"명");
+					$("#secCnt").text(data.secCnt +"명");
+				}
+			}
+		});
+	}
 
 
 </script>
@@ -345,17 +476,18 @@ $(document).ready(function(){
         ***********************************-->
         <div class="content-body">
             <!-- row -->
+            기준 금액 1만원 
             <div class="container-fluid">
-                <div class="row">
+                <div class="row" id="mainAmt">
                     <div class="col-lg-3 col-sm-6">
                         <div class="card">
                             <div class="stat-widget-two card-body">
                                 <div class="stat-content">
-                                    <div class="stat-text">Today Expenses </div>
-                                    <div class="stat-digit"> <i class="fa fa-usd"></i>8500</div>
+                                    <div class="stat-text">당일 주문 금액 </div>
+                                    <div class="stat-digit" id="toDayAmt"> <i class="fa fa-usd"></i>0</div>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-success w-85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar progress-bar-success w-0" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
@@ -364,11 +496,11 @@ $(document).ready(function(){
                         <div class="card">
                             <div class="stat-widget-two card-body">
                                 <div class="stat-content">
-                                    <div class="stat-text">Income Detail</div>
-                                    <div class="stat-digit"> <i class="fa fa-usd"></i>7800</div>
+                                    <div class="stat-text">당월 주문 금액 </div>
+                                    <div class="stat-digit" id="monthAmt"> <i class="fa fa-usd"></i>0</div>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-primary w-75" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar progress-bar-primary w-0" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
@@ -377,11 +509,11 @@ $(document).ready(function(){
                         <div class="card">
                             <div class="stat-widget-two card-body">
                                 <div class="stat-content">
-                                    <div class="stat-text">Task Completed</div>
-                                    <div class="stat-digit"> <i class="fa fa-usd"></i> 500</div>
+                                    <div class="stat-text">당일 산하 주문금액 </div>
+                                    <div class="stat-digit" id="pToDayAmt"> <i class="fa fa-usd"></i> 0</div>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar progress-bar-warning w-0" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
@@ -390,11 +522,11 @@ $(document).ready(function(){
                         <div class="card">
                             <div class="stat-widget-two card-body">
                                 <div class="stat-content">
-                                    <div class="stat-text">Task Completed</div>
-                                    <div class="stat-digit"> <i class="fa fa-usd"></i>650</div>
+                                    <div class="stat-text">당월 산하 주문금액</div>
+                                    <div class="stat-digit" id="pMonthAmt"> <i class="fa fa-usd"></i>0</div>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-danger w-65" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar progress-bar-danger w-0" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
@@ -406,7 +538,8 @@ $(document).ready(function(){
                     <div class="col-xl-8 col-lg-8 col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Sales Overview</h4>
+                                <!-- <h4 class="card-title">Sales Overview</h4> -->
+                                <h4 class="card-title">월별 가입인원수 비교 </h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -421,17 +554,16 @@ $(document).ready(function(){
                         <div class="card">
                             <div class="card-body text-center">
                                 <div class="m-t-10">
-                                    <h4 class="card-title">Customer Feedback</h4>
-                                    <h2 class="mt-3">385749</h2>
+                                    <h4 class="card-title">가입자수</h4>
+                                    <h2 class="mt-3" id="totalCnt">385749</h2>
                                 </div>
                                 <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
                                     <i class="ti-control-shuffle pa"></i>
                                 </div>
                                 <ul class="widget-line-list m-b-15">
-                                    <li class="border-right">92% <br><span class="text-success"><i
-                                                class="ti-hand-point-up"></i> Positive</span></li>
-                                    <li>8% <br><span class="text-danger"><i
-                                                class="ti-hand-point-down"></i>Negative</span></li>
+                                    <li class="border-right"><span id="regCnt">9명</span> <br><span class="text-success"><i class="ti-hand-point-up"></i> 당일 가입자</span></li>
+                                    <li><span id="secCnt">8명</span> <br><span class="text-danger"><i
+                                                class="ti-hand-point-down"></i>당일 탈퇴자</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -595,6 +727,10 @@ $(document).ready(function(){
                             <div class="card-body">
                                 <div id="vmap13" class="vmap"></div>
                             </div>
+                            <!-- <div class="card-body">
+                            	<div id="map"></div>
+                            </div> -->
+                            
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -976,6 +1112,10 @@ $(document).ready(function(){
     <script src="./vendor/jqvmap/js/jquery.vmap.usa.js"></script>
     <script src="./vendor/jquery.counterup/jquery.counterup.min.js"></script>
 
+   <!--  KR 지도   -->
+    <!-- <script src="./vendor/vectormap/js/jquery-jvectormap-kr-mill.js"></script>
+    <script src="./vendor/vectormap/js/jquery-jvectormap-2.0.5.min.js"></script>
+	<script src="./vendor/vectormap/js/jquery-1.8.2.js"></script> -->
 
     <script src="./js/dashboard/dashboard-1.js"></script>
 
