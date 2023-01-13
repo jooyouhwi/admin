@@ -369,6 +369,7 @@ $(document).ready(function(){
                                     <li><a href="./email-compose.html">Compose</a></li>
                                     <li><a href="./email-inbox.html">Inbox</a></li>
                                     <li><a href="./email-read.html">Read</a></li>
+                                    <li><a th:href="${'/board'}">게시판</a></li>
                                 </ul>
                             </li>
                             <li><a href="./app-calender.html">Calendar</a></li>
@@ -438,9 +439,11 @@ $(document).ready(function(){
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-layout-25"></i><span class="nav-text">Table</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
+                            <!-- <li><a href="table-bootstrap-basic.html">Bootstrap</a></li> -->
+                            <li><a th:href="${'/bootstrap'}">Bootstrap</a></li>
                             <!-- <li><a href="table-datatable-basic.html">Datatable</a></li> -->
                             <li><a th:href="${'/dblist'}">Datatable</a></li>
+                            <li><a th:href="${'/gridlist'}">W2ui.Grid</a></li>
                         </ul>
                     </li>
 

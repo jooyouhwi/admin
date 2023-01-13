@@ -3,17 +3,24 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
-<mapper namespace="com.wow.api.dao.SystemMapper">
-	<!-- 회원정보-->
-	<select id="findMemberLogin" parameterType="com.wow.api.model.MemberModel" resultType="com.wow.api.model.MemberModel">
-		 SELECT Userid   AS userid
-		      , UserName AS username
-		      , Cnt_Cd   AS cntCd 
-		      , Nt_Cd    AS ntCd
-		      , Login_Id AS loginId 
-		      , Passwd   AS passwd
+<mapper namespace="com.wow.api.dao.MemberMapper">
+	
+	<!-- 회원리스트-->
+	<select id="memberSearch" parameterType="com.wow.api.model.MemberModel" resultType="com.wow.api.model.MemberModel">
+		 SELECT rownum   AS recid
+		      , Userid   AS userid
+	          , UserName AS username
+	          , Cnt_Cd   AS cntCd 
+	          , Cnt_Name AS cntName 
+	          , p_Id     AS pId
+	          , p_Name   AS pName
+	          , r_Id     AS rId
+	          , r_Name   AS rName
 		   FROM Member
-		  WHERE Userid = #{loginId} 
+		WHERE rownum <![CDATA[<=]]>100
+		 <!--  WHERE Userid = ${userId} -->
 		 
 	</select>
+	
+	
 </mapper>

@@ -4,6 +4,20 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.wow.api.dao.SystemMapper">
+
+	<!-- 회원정보-->
+	<select id="findMemberLogin" parameterType="com.wow.api.model.MemberModel" resultType="com.wow.api.model.MemberModel">
+		 SELECT Userid   AS userid
+		      , UserName AS username
+		      , Cnt_Cd   AS cntCd 
+		      , Nt_Cd    AS ntCd
+		      , Login_Id AS loginId 
+		      , Passwd   AS passwd
+		   FROM Member
+		  WHERE Userid = #{loginId} 
+		 
+	</select>
+	
 	<!-- 로그인 암호화 -->
 	<select id="system_encrypt" parameterType="com.wow.api.model.SystemModel" resultType="string">
 		 SELECT SHA256.ENCRYPT(#{passwd}) AS passwd FROM DUAL
